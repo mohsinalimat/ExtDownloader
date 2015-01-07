@@ -17,7 +17,7 @@ A. This app can download any kind of file, in any size, without limitation. Wher
 * Downloading from torrent or similar services are not supported according to App Store limitation.
 
 ###5. I need a feature which is not available in app. What can I do?
-**A.** Feel free to contact us on extdownloader@gmail.com or @ext_downloader on Twitter
+**A.** Feel free to contact us on extdownloader@gmail.com or [@ext_downloader on Twitter](http://twitter.com/ext_downloader)
 
 ###6. My question is not listed. how can I add it?
-**A.** Simply create an issue on github. We will add your question.
+**A.** Simply create an [issue on github](https://github.com/amosavian/ExtDownloader/issues). We will add your question.
