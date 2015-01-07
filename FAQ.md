@@ -14,6 +14,7 @@ A. This app can download any kind of file, in any size, without limitation. Wher
 * Sites which need complicated or cookie-based authentication like email services  (e.g. Gmail). Even desktop download managers are not able to fetch files from these sources. The best solution for these kind of sources is using native app for these services
 * Upload services which offer indirect links on free services e.g. RapidShare or Upload.to. You should either obtain premium services or use desktop browser to download files from these services
 * Services which offer copyrighted materials like Youtube and SoundCloud won’t allow you to download contents directly according to App Store limitations. Though there are few third-party sites offer proxy links to contents of these sites. These third-party link providers are somehow usable in our app.
+* JavaScript embeded links: some websites trigger javascript functions to refer to file links. These types of links are not standardized and not supported on app. But if you consider downloading contents from a popular website which is not protected by copyright law, contact us to add support for that website.
 * Downloading from torrent or similar services are not supported according to App Store limitation.
 
 ###5. I need a feature which is not available in app. What can I do?
