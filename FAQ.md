@@ -19,15 +19,18 @@ A. This app can download any kind of file, in any size, without limitation. Wher
 
 ###5. Why my download task restarted from the begining after I pausing task or exiting app?
 **A.** App will continue download after termination or exit if these conditions are met:
-* Protocol of fie transmission is HTTP
+* Protocol of file transmission is HTTP
 * Server supports resuming which is indicated in download details page
 * File has not been changed during download on server
 * And the most important thing is that operating system should conserve temporary downloading data. App saves it in temporary folder in which operating system may erase its contents in case of insufficient free storage remaining.
 
 If one of these conditions are not met, app will restart download from begining.
 
-###6. I need a feature which is not available in app. What can I do?
+###6. I downloaded a file but it's site is not appropriate and doesn't have contents which I intended.
+**A.** Sometimes links are not really pointing to file itself, but referring to another webpage which may include link to file itself or not, or even may referring to a error page!
+
+###7. I need a feature which is not available in app. What can I do?
 **A.** Feel free to contact us on extdownloader@gmail.com or [@ext_downloader on Twitter](http://twitter.com/ext_downloader)
 
-###7. My question is not listed. how can I add it?
+###8. My question is not listed. how can I add it?
 **A.** Simply create an [issue on github](https://github.com/amosavian/ExtDownloader/issues). We will add your question.
