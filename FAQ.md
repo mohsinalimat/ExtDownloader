@@ -22,6 +22,9 @@ A. This app can download any kind of file, in any size, without limitation. Wher
 * Protocol of fie transmission is HTTP
 * Server supports resuming which is indicated in download details page
 * File has not been changed during download on server
+* And the most important thing is that operating system should conserve temporary downloading data. App saves it in temporary folder in which operating system may erase its contents in case of insufficient free storage remaining.
+
+If one of these conditions are not met, app will restart download from begining.
 
 ###6. I need a feature which is not available in app. What can I do?
 **A.** Feel free to contact us on extdownloader@gmail.com or [@ext_downloader on Twitter](http://twitter.com/ext_downloader)
