@@ -26,8 +26,8 @@ A. This app can download any kind of file, in any size, without limitation. Wher
 
 If one of these conditions are not met, app will restart download from begining.
 
-###6. I downloaded a file but it's site is not appropriate and doesn't have contents which I intended.
-**A.** Sometimes links are not really pointing to file itself, but referring to another webpage which may include link to file itself or not, or even may referring to a error page!
+###6. I downloaded a file but it's size is not appropriate and doesn't have contents which I intended.
+**A.** Sometimes links are not really pointing to file itself, but referring to another webpage which may include link to file itself or not, or even may refer to an error page!
 
 ###7. I need a feature which is not available in app. What can I do?
 **A.** Feel free to contact us on extdownloader@gmail.com or [@ext_downloader on Twitter](http://twitter.com/ext_downloader)
