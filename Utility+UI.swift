@@ -217,3 +217,45 @@ extension Utility {
         }
     }
 }
+
+
+class AlertViewHandler: NSObject, UIAlertViewDelegate {
+    var firstOtherHandler: ((alertView: UIAlertView) -> Void)? = nil
+    var cancelHandler: ((alertView: UIAlertView) -> Void)? = nil
+    
+    func alertViewCancel(alertView: UIAlertView) {
+        if cancelHandler !=  nil {
+            cancelHandler!(alertView: alertView)
+        }
+    }
+    
+    func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
+        if buttonIndex == alertView.cancelButtonIndex {
+            if cancelHandler !=  nil {
+                cancelHandler!(alertView: alertView)
+            }
+        }
+        if buttonIndex == alertView.cancelButtonIndex + 1 {
+            if firstOtherHandler !=  nil {
+                firstOtherHandler!(alertView: alertView)
+            }
+        }
+    }
+}
+
+class ActionSheetHandler: NSObject, UIActionSheetDelegate {
+    var completionHandler: ((actionSheet: UIActionSheet, buttonIndex: Int) -> Void)? = nil
+    var cancelHandler: ((actionSheet: UIActionSheet) -> Void)? = nil
+    
+    func actionSheetCancel(actionSheet: UIActionSheet) {
+        if cancelHandler != nil {
+            cancelHandler!(actionSheet: actionSheet);
+        }
+    }
+    
+    func actionSheet(actionSheet: UIActionSheet, willDismissWithButtonIndex buttonIndex: Int) {
+        if completionHandler != nil {
+            completionHandler!(actionSheet: actionSheet, buttonIndex: buttonIndex);
+        }
+    }
+}
