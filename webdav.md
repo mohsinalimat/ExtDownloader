@@ -1,4 +1,17 @@
-#Windows 8/8.1
+#Table Of Contents
+
+1. [Windows 8/8.1](#Windows 8/8.1)
+2. [Windows Vista/7](#Windows Vista/7)
+3. [Windows XP](#Windows XP)
+4. [OSX (Mac)](#OSX (Mac))
+5. [Linux](#Linux)
+..1. [Nautilus](#Nautilus)
+..2. [Command-Line](#Command-Line)
+___
+
+
+
+##Windows 8/8.1
 
 1. From the Start Screen go to **Apps > Windows System > This PC**
 2. Select **Computer** from the top ribbon
@@ -22,7 +35,7 @@
 8. Click **Next**, then **Finish**
 9. Navigate to the folder where your file is stored.
 
-#Windows Vista/7
+##Windows Vista/7
 
 1. Click **Start > Computer**
 2. Click on **Map Network Drive**
@@ -45,7 +58,7 @@
 8. Click **Next**, then **Finish**
 9. Navigate to the folder where your file is stored.
 
-#Windows XP
+##Windows XP
 
 1. Click **Start > My Computer**
 2. Select **Tools > Map Network Drive**
@@ -71,7 +84,7 @@
 8. Click **Next**, then **Finish**
 9. Navigate to the folder where your file is stored. 
 
-#OSX (Mac)
+##OSX (Mac)
 
 1. In Finder, select **Go > Connect to Server...** or Press **⌘-K**
 
@@ -83,7 +96,7 @@
 
 3. Navigate to the folder where your file is stored. 
 
-#Linux
+##Linux
 
 ###Nautilus
 
