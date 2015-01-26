@@ -7,7 +7,8 @@
 5. [Linux](#linux)
   1. [Nautilus](#nautilus)
   2. [Command-Line](#command-line)
-
+6. [iOS}(#ios)
+  1. [GoodReader](#goodreader-4)
 ___
 
 ##Windows 8/8.1
