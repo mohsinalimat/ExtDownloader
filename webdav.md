@@ -1,15 +1,14 @@
 #Table Of Contents
 
-1. [Windows 8/8.1](#Windows 8/8.1)
-2. [Windows Vista/7](#Windows Vista/7)
-3. [Windows XP](#Windows XP)
-4. [OSX (Mac)](#OSX (Mac))
-5. [Linux](#Linux)
-..1. [Nautilus](#Nautilus)
-..2. [Command-Line](#Command-Line)
+1. [Windows 8/8.1](##Windows 8/8.1)
+2. [Windows Vista/7](##Windows Vista/7)
+3. [Windows XP](##Windows XP)
+4. [OSX (Mac)](##OSX (Mac))
+5. [Linux](##Linux)
+  1. [Nautilus](###Nautilus)
+  2. [Command-Line](###Command-Line)
+
 ___
-
-
 
 ##Windows 8/8.1
 
