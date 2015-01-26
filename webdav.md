@@ -114,3 +114,21 @@ ___
 
 1. Enter **cadaver** then url shown on app screen (e.g. **cadaver http://192.168.1.100**)
 2. Click **OK**
+
+##iOS
+
+###GoodReader 4
+
+1. Tap on **Connect** toolbar item
+
+![img_1305](https://cloud.githubusercontent.com/assets/6725192/5897947/4e93063c-a55f-11e4-8c4e-0c6487155534.PNG)
+
+2. Tap on **Add** button then scroll down to find **WebDAV Server**, tap on it
+
+![img_1307](https://cloud.githubusercontent.com/assets/6725192/5897971/909cff74-a55f-11e4-926f-f10994d81752.PNG)
+
+3. Enter the url shown on app screen (e.g. http://192.168.1.100) in the **URL-address** box and tap **Add**
+ 
+![img_1308](https://cloud.githubusercontent.com/assets/6725192/5897948/4eb51038-a55f-11e4-84b6-bcfb85a9a6fa.PNG)
+
+4. Navigate to the folder where your file is stored. 
