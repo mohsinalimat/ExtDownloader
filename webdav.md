@@ -106,7 +106,7 @@ ___
 
 3. Choose **Custom Location*** in front of **Service Type** and enter the url shown on app screen (e.g. http://192.168.1.100) in front of **Location (URI)**
 
-![alt text](http://www2.le.ac.uk/offices/itservices/ithelp/images/services/research-r-drive/PasswordLinux.jpg "PasswordLinux")
+![alt text](http://www2.le.ac.uk/offices/itservices/ithelp/images/services/research-r-drive/ConnectiondetailsLinux.jpg "PasswordLinux")
 
 4. Navigate to the folder where your file is stored. 
 
