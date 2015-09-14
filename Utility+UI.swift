@@ -6,6 +6,35 @@
 //  Copyright (c) 1393 Mousavian. All rights reserved.
 //
 
+import UIKit
+import LocalAuthentication
+
+class TextInputTraits: NSObject, UITextInputTraits {
+    var autocapitalizationType: UITextAutocapitalizationType = .None
+    var autocorrectionType: UITextAutocorrectionType = .Default
+    var spellCheckingType: UITextSpellCheckingType = .Default
+    var keyboardType: UIKeyboardType = .Default
+    var keyboardAppearance: UIKeyboardAppearance = .Default
+    var returnKeyType: UIReturnKeyType = .Default
+    var enablesReturnKeyAutomatically: Bool = false
+    private var _secureTextEntry: Bool = false
+    var secureTextEntry: Bool {
+        return _secureTextEntry
+    }
+    
+    class func secretInput() -> TextInputTraits {
+        let trait = TextInputTraits()
+        trait._secureTextEntry = true
+        return trait
+    }
+    
+    class func urlInput() -> TextInputTraits {
+        let trait = TextInputTraits()
+        trait.keyboardType = UIKeyboardType.URL
+        return trait
+    }
+}
+
 class Utility {
     // MARK: - User interface and interaction functions
     struct UI {
