@@ -6,7 +6,7 @@
 //  Copyright (c) 1393 Mousavian. All rights reserved.
 //
 
-extension Utility {
+class Utility {
     // MARK: - User interface and interaction functions
     struct UI {
         enum AnchorView {
