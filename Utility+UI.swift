@@ -6,9 +6,6 @@
 //  Copyright (c) 1393 Mousavian. All rights reserved.
 //
 
-import UIKit
-import LocalAuthentication
-
 extension Utility {
     // MARK: - User interface and interaction functions
     struct UI {
@@ -35,15 +32,18 @@ extension Utility {
             }
         }
         
+        
+        
         struct AlertTextField {
-            let placeHolder: String;
-            let defaultValue: String;
-            let secret: Bool;
+            var placeHolder: String;
+            var defaultValue: String;
+            var textInputTraits: UITextInputTraits;
+            var selectedRange: Range<Int>? = nil;
             
-            init(placeHolder: String = "", defaultValue: String = "", secret: Bool = false) {
+            init(placeHolder: String = "", defaultValue: String = "", textInputTraits: UITextInputTraits = TextInputTraits()) {
                 self.placeHolder = placeHolder;
                 self.defaultValue = defaultValue;
-                self.secret = secret;
+                self.textInputTraits = textInputTraits;
             }
             
         }
@@ -60,10 +60,18 @@ extension Utility {
             }
         }
         
+        static func isRegularPad(viewController: UIViewController) -> Bool {
+            if #available(iOS 8, *) {
+                return UIDevice.currentDevice().userInterfaceIdiom == .Pad && viewController.traitCollection.horizontalSizeClass != .Compact
+            } else {
+                return  UIDevice.currentDevice().userInterfaceIdiom == .Pad
+            }
+        }
+        
         static func askAction(message: String, withTitle title: String, viewController: UIViewController, anchor: Utility.UI.AnchorView, buttons: [ActionButton]) {
-            if NSClassFromString("UIAlertController") != nil {
+            if #available(iOS 8, *) {
                 let simplePrompt = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.ActionSheet)
-                if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+                if !isRegularPad(viewController) {
                     simplePrompt.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
                 }
                 
@@ -80,7 +88,7 @@ extension Utility {
             } else {
                 let promptDelegate = ActionSheetHandler();
                 var destructiveIndex = -1
-                for (i, button) in enumerate(buttons) {
+                for (i, button) in buttons.enumerate() {
                     if button.buttonType == .Destructive {
                         destructiveIndex = i
                     }
@@ -115,18 +123,27 @@ extension Utility {
         
         // Please notice complicated text field combination is not suported on iOS7
         static func askAlert(message: String, withTitle title: String, viewController: UIViewController, buttons: [AlertButton], textFields : [AlertTextField]? = nil) -> Bool {
-            if NSClassFromString("UIAlertController") != nil {
+            if #available(iOS 8, *) {
                 let simplePrompt = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+                var textFieldsUI: [UITextField] = []
                 if buttons.count == 0 {
                     simplePrompt.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
                 }
                 
                 if let textFields = textFields {
                     for textFieldItem in textFields {
-                        simplePrompt.addTextFieldWithConfigurationHandler({(textField: UITextField!) in
+                        simplePrompt.addTextFieldWithConfigurationHandler({(textField: UITextField) in
                             textField.placeholder = textFieldItem.placeHolder;
                             textField.text = textFieldItem.defaultValue;
-                            textField.secureTextEntry = textFieldItem.secret;
+                            textField.secureTextEntry = textFieldItem.textInputTraits.secureTextEntry ?? false
+                            textField.keyboardType = textFieldItem.textInputTraits.keyboardType ?? .Default
+                            textField.returnKeyType = textFieldItem.textInputTraits.returnKeyType ?? .Default
+                            textField.keyboardAppearance = textFieldItem.textInputTraits.keyboardAppearance ?? .Default
+                            textField.spellCheckingType = textFieldItem.textInputTraits.spellCheckingType ?? .Default
+                            textField.autocapitalizationType = textFieldItem.textInputTraits.autocapitalizationType ?? .None
+                            textField.autocorrectionType = textFieldItem.textInputTraits.autocorrectionType ?? .Default
+                            textField.enablesReturnKeyAutomatically = textFieldItem.textInputTraits.enablesReturnKeyAutomatically ?? false
+                            textFieldsUI.append(textField)
                         })
                     }
                 }
@@ -140,15 +157,22 @@ extension Utility {
                     }
                     simplePrompt.addAction(UIAlertAction(title: button.buttonTitle, style: style, handler: { (_) -> Void in
                         var textInputs: [String] = []
-                        if let textFields = simplePrompt.textFields as? [UITextField] {
-                            textInputs = textFields.map { $0.text }
+                        if let textFields = simplePrompt.textFields {
+                            textInputs = textFields.map { $0.text ?? "" }
                         }
                         button.buttonHandler?(textInputs: textInputs)
                         return
                     }))
                 }
                 
-                viewController.presentViewController(simplePrompt, animated: true, completion: nil)
+                viewController.presentViewController(simplePrompt, animated: true, completion: {
+                    for (i, textFieldItem) in (textFields ?? []).enumerate() {
+                        if let range = textFieldItem.selectedRange, start = textFieldsUI[i].positionFromPosition(textFieldsUI[i].beginningOfDocument, offset: range.startIndex), end = textFieldsUI[i].positionFromPosition(start, offset: range.endIndex) {
+                            textFieldsUI[i].selectedTextRange = textFieldsUI[i].textRangeFromPosition(start, toPosition: end)
+                        }
+                    }
+                })
+                
             } else {
                 let promptDelegate = AlertViewHandler();
                 let simplePrompt = UIAlertView(title: title, message: (message), delegate: promptDelegate, cancelButtonTitle: nil)
@@ -162,7 +186,7 @@ extension Utility {
                 }
                 
                 var cancelIndex = -1
-                for (i, button) in enumerate(buttons) {
+                for (i, button) in buttons.enumerate() {
                     if button.buttonType == .Cancel {
                         cancelIndex = i
                     }
@@ -176,22 +200,37 @@ extension Utility {
                     if textFields.count == 0 {
                         alertType = .Default
                     }
-                    if textFields.count == 1 && textFields[0].secret == false {
+                    if textFields.count == 1 && textFields[0].textInputTraits.secureTextEntry == false {
                         alertType = .PlainTextInput
                         textFieldsCount = 1
                     }
-                    if textFields.count == 1 && textFields[0].secret == true {
+                    if textFields.count == 1 && textFields[0].textInputTraits.secureTextEntry == true {
                         alertType = .SecureTextInput
                         textFieldsCount = 1
                     }
-                    if textFields.count == 2 && textFields[0].secret == false && textFields[1].secret == true {
+                    if textFields.count == 2 && textFields[0].textInputTraits.secureTextEntry == false && textFields[1].textInputTraits.secureTextEntry == true {
                         alertType = .LoginAndPasswordInput
                         textFieldsCount = 2
                     }
                     simplePrompt.alertViewStyle = alertType ?? .Default
                     for i in 0...(textFieldsCount - 1) {
-                        simplePrompt.textFieldAtIndex(i)?.text = textFields[i].defaultValue
-                        simplePrompt.textFieldAtIndex(i)?.placeholder = textFields[i].placeHolder
+                        if let textField = simplePrompt.textFieldAtIndex(i) {
+                            let textFieldItem = textFields[i]
+                            textField.text = textFieldItem.defaultValue
+                            textField.placeholder = textFieldItem.placeHolder
+                            textField.secureTextEntry = textFieldItem.textInputTraits.secureTextEntry ?? false
+                            textField.keyboardType = textFieldItem.textInputTraits.keyboardType ?? .Default
+                            textField.returnKeyType = textFieldItem.textInputTraits.returnKeyType ?? .Default
+                            textField.keyboardAppearance = textFieldItem.textInputTraits.keyboardAppearance ?? .Default
+                            textField.spellCheckingType = textFieldItem.textInputTraits.spellCheckingType ?? .Default
+                            textField.autocapitalizationType = textFieldItem.textInputTraits.autocapitalizationType ?? .None
+                            textField.autocorrectionType = textFieldItem.textInputTraits.autocorrectionType ?? .Default
+                            textField.enablesReturnKeyAutomatically = textFieldItem.textInputTraits.enablesReturnKeyAutomatically ?? false
+                            if let range = textFields[i].selectedRange, start = textField.positionFromPosition(textField.beginningOfDocument, offset: range.startIndex), end = textField.positionFromPosition(start, offset: range.endIndex - range.startIndex) {
+                                textField.selectedTextRange = textField.textRangeFromPosition(start, toPosition: end)
+                            }
+                        }
+                        
                     }
 
                 }
@@ -232,7 +271,7 @@ extension Utility {
             let okBtn = AlertButton(title: "OK", buttonType: ButtonType.Default, buttonHandler: { (textInputs) -> Void in
                 completionHandler(text: textInputs[0])
             })
-            let textFields = [AlertTextField(placeHolder: placeHolder, defaultValue: defaultText, secret: false)]
+            let textFields = [AlertTextField(placeHolder: placeHolder, defaultValue: defaultText)]
             askAlert(message, withTitle: title, viewController: viewController, buttons: [cancelBtn, okBtn], textFields: textFields)
         }
         
@@ -241,21 +280,38 @@ extension Utility {
             let okBtn = AlertButton(title: "OK", buttonType: ButtonType.Default, buttonHandler: { (textInputs) -> Void in
                 completionHandler(user: textInputs[0], pass: textInputs[1])
             })
-            let textFields = [AlertTextField(placeHolder: "User Name", defaultValue: "", secret: false), AlertTextField(placeHolder: "Password", defaultValue: "", secret: true)]
+            let textFields = [AlertTextField(placeHolder: "User Name"), AlertTextField(placeHolder: "Password", defaultValue: "", textInputTraits: TextInputTraits.secretInput())]
             askAlert(message, withTitle: title, viewController: viewController, buttons: [cancelBtn, okBtn], textFields: textFields)
         }
         
         static func presentViewController(viewController: UIViewController, parentViewController parentVC: UIViewController, anchor: AnchorView, size: CGSize?, navigationPush: Bool) -> UIPopoverController? {
-            if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
-                let popOver = UIPopoverController(contentViewController: viewController);
-                if size != nil {
-                    viewController.preferredContentSize = size!;
+            if isRegularPad(parentVC) {
+                if #available(iOS 8, *) {
+                    viewController.modalPresentationStyle = UIModalPresentationStyle.Popover
+                    parentVC.presentViewController(viewController, animated: true, completion: nil)
+                    let popOver = viewController.popoverPresentationController;
+                    popOver?.permittedArrowDirections = .Any
+                    switch anchor {
+                    case .BarButtonItem(button: let button):
+                        popOver?.barButtonItem = button
+                    case .View(view: let view, frame: let frame):
+                        popOver?.sourceView = view
+                        popOver?.sourceRect = frame
+                    }
+                    return nil
+                } else {
+                    let popOver = UIPopoverController(contentViewController: viewController);
+                    if size != nil {
+                        viewController.preferredContentSize = size!;
+                    }
+                    switch anchor {
+                    case .BarButtonItem(button: let button):
+                        popOver.presentPopoverFromBarButtonItem(button, permittedArrowDirections: .Any, animated: true)
+                    case .View(view: let view, frame: let frame):
+                        popOver.presentPopoverFromRect(frame, inView: view, permittedArrowDirections: .Any, animated: true)
+                    }
+                    return popOver;
                 }
-                switch anchor {
-                case .BarButtonItem(button: let button): popOver.presentPopoverFromBarButtonItem(button, permittedArrowDirections: .Any, animated: true)
-                case .View(view: let view, frame: let frame): popOver.presentPopoverFromRect(frame, inView: view, permittedArrowDirections: .Any, animated: true)
-                }
-                return popOver;
             } else {
                 if navigationPush {
                     parentVC.navigationController?.pushViewController(viewController, animated: true)
@@ -266,39 +322,71 @@ extension Utility {
             }
         }
         
-        static var touchID: (available: Bool, error: LAError?) {
-            if (NSClassFromString("LAContext") == nil) {
-                return (false, LAError.TouchIDNotAvailable);
+        static func showCommentOnView(view: UIView, comment: String = "") {
+            while let commentView = view.viewWithTag(1001) {
+                commentView.removeFromSuperview();
             }
-            let myContext = LAContext()
-            var authError: NSError?
-            let available = myContext.canEvaluatePolicy(LAPolicy.DeviceOwnerAuthenticationWithBiometrics, error: &authError);
-            if authError == nil {
-                return (available, nil)
-            } else {
-                return (available, LAError(rawValue: authError!.code))
+            if !comment.isEmpty {
+                // Comment View
+                let commentView = UIView();
+                commentView.tag = 1001;
+                commentView.translatesAutoresizingMaskIntoConstraints = false
+                view.addSubview(commentView);
+                view.bringSubviewToFront(commentView)
+                view.addConstraint(NSLayoutConstraint(item: commentView, attribute: NSLayoutAttribute.Leading, relatedBy: NSLayoutRelation.Equal, toItem: view, attribute: NSLayoutAttribute.Leading, multiplier: 1, constant: 0))
+                view.addConstraint(NSLayoutConstraint(item: commentView, attribute: NSLayoutAttribute.Trailing, relatedBy: NSLayoutRelation.Equal, toItem: view, attribute: NSLayoutAttribute.Trailing, multiplier: 1, constant: 0))
+                view.addConstraint(NSLayoutConstraint(item: commentView, attribute: NSLayoutAttribute.Top, relatedBy: NSLayoutRelation.Equal, toItem: view, attribute: NSLayoutAttribute.Top, multiplier: 1, constant: 0))
+                view.addConstraint(NSLayoutConstraint(item: commentView, attribute: NSLayoutAttribute.Bottom, relatedBy: NSLayoutRelation.Equal, toItem: view, attribute: NSLayoutAttribute.Bottom, multiplier: 1, constant: 0))
+                // Comment Label
+                let commentLabel = UILabel();
+                commentLabel.text = comment
+                commentLabel.textAlignment = NSTextAlignment.Center;
+                commentLabel.textColor = UIColor.grayColor();
+                commentLabel.numberOfLines = 0;
+                commentLabel.lineBreakMode = .ByWordWrapping
+                commentLabel.tag = 1001;
+                commentLabel.translatesAutoresizingMaskIntoConstraints = false
+                commentView.addSubview(commentLabel);
+                commentView.addConstraint(NSLayoutConstraint(item: commentLabel, attribute: NSLayoutAttribute.Leading, relatedBy: NSLayoutRelation.Equal, toItem: commentView, attribute: NSLayoutAttribute.Leading, multiplier: 1, constant: 20))
+                commentView.addConstraint(NSLayoutConstraint(item: commentLabel, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: commentView, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0))
+                commentView.addConstraint(NSLayoutConstraint(item: commentLabel, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: commentView, attribute: NSLayoutAttribute.CenterY, multiplier: 1, constant: 0))
+                commentView.addConstraint(NSLayoutConstraint(item: commentLabel, attribute: NSLayoutAttribute.Top, relatedBy: NSLayoutRelation.Equal, toItem: commentView, attribute: NSLayoutAttribute.Top, multiplier: 1, constant: 20))
             }
         }
         
-        static func touchAuthenticate(reason: String, successHandler:(() -> Void), failureHandler: ((error: LAError) -> Void), localizedFallbackTitle: String = "") {
-            if NSClassFromString("LAContext") == nil {
-                return
-            }
+        @available(iOS 8.0, *)
+        static var touchID: (available: Bool, error: LAError?) {
             let myContext = LAContext()
             var authError: NSError?
-            let available = myContext.canEvaluatePolicy(LAPolicy.DeviceOwnerAuthenticationWithBiometrics, error: &authError);
-            if available {
+            let available: Bool
+            if myContext.canEvaluatePolicy(LAPolicy.DeviceOwnerAuthenticationWithBiometrics, error: &authError) {
+                available = true
+            } else {
+                available = false
+            };
+            if let authError = authError {
+                return (available, LAError(rawValue: authError.code))
+            } else {
+                return (available, nil)
+            }
+        }
+        
+        @available(iOS 8.0, *)
+        static func touchAuthenticate(reason: String, successHandler:(() -> Void), failureHandler: ((error: LAError) -> Void), localizedFallbackTitle: String = "") {
+            let myContext = LAContext()
+            var authError: NSError?
+            if  myContext.canEvaluatePolicy(LAPolicy.DeviceOwnerAuthenticationWithBiometrics, error: &authError) {
                 myContext.localizedFallbackTitle = localizedFallbackTitle;
                 myContext.evaluatePolicy(LAPolicy.DeviceOwnerAuthenticationWithBiometrics, localizedReason: reason, reply: { (success, error) -> Void in
                     if success {
                         successHandler();
                     } else {
-                        failureHandler(error: LAError(rawValue: error.code)!);
+                        failureHandler(error: LAError(rawValue: authError?.code ?? 0) ?? LAError.TouchIDNotAvailable);
                     }
                 })
             } else {
                 failureHandler(error: LAError.TouchIDNotAvailable);
-            }
+            };
         }
         
         static var appInBackground: Bool {
