@@ -1,4 +1,4 @@
-# ExtDownloader 2.0 Frequently Asked Questions
+# ExtDownloader 5 Frequently Asked Questions
 
 ###1. What kind of files this can download?
 **A.** This app can download any kind of file, in any size, without limitation. In Lite version it's restricted to 25MB. Opening and previewing are limited to types which iOS supports internally.
