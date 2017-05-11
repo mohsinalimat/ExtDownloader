@@ -30,7 +30,7 @@ If one of these conditions are not met, app will restart download from begining.
 **A.** Sometimes links are not really pointing to file itself, but referring to another webpage which may include link to file itself or not, or even may refer to an error page!
 
 ### 7. I need a feature which is not available in app. What can I do?
-**A.** Feel free to contact us on extdownloader@gmail.com or [@ext_downloader on Twitter](http://twitter.com/ext_downloader)
+**A.** Feel free to contact us on extdownloader@gmail.com or [@edmapplication on Twitter](http://twitter.com/edmapplication)
 
 ###8. My question is not listed. how can I add it?
 **A.** Simply create an [issue on github](https://github.com/amosavian/ExtDownloader/issues) or [contact us on website](https://edmapplication.com). We will add your question.
